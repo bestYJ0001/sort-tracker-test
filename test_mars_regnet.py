@@ -14,29 +14,20 @@ print("GPU found" if tf.test.gpu_device_name() else "No GPU found")
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 # os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
-IMAGE_SHAPE = (256, 128, 3)
+IMAGE_SHAPE = (128, 64, 3)
 DATASET_NAME = "MARS"
 MODEL_NAME = "REGNET-S"
 TRAIN_EPOCH = 100
 NUM_CLASS = 1500+1
 
-def argmax_pred(labels, pred):
-    # return tf.keras.metrics.Accuracy().update_state(y_true=labels, y_pred=tf.argmax(pred, 1)).result()
-    if int(tf.argmax(pred, 1)) is int(labels):
-        print("::::::::::::: argmax : ", tf.argmax(pred, 1), " label : ", labels)
-        return 1
-    else:
-        return 0
-    return 0
-
 def main():
     arg_parser = argparse.ArgumentParser(description="Metric trainer (%s)")
     arg_parser.add_argument(
         "--model_path", help="train or eval",
-        default="D:/NOVATEK_1222/python/git-source/sort-tracker-test/saved_models/MARSREGNET-Sfinal.h5")
+        default="D:/NOVATEK_1222/python/git-source/sort-tracker-test/saved_models/MARS_REGNET-S_TEST-00030.h5")
     arg_parser.add_argument(
         "--data_path", help="train or eval",
-        default="D:/NOVATEK_1222/dataset/mars_dataset/bbox_train_one/0019/0019C1T0001F001.jpg")
+        default="D:/NOVATEK_1222/dataset/mars_dataset/bbox_train_ref/0091/0091C1T0006F030.jpg")
     arg_parser.add_argument(
         "--run_id", required=True,
         help="please "
@@ -51,7 +42,7 @@ def main():
     datasets = glob.glob(args.data_path)
     for dataset in datasets:
         print(dataset)
-        img = cv2.imread(dataset, cv2.IMREAD_COLOR)
+        img = cv2.resize(cv2.imread(dataset, cv2.IMREAD_COLOR), (IMAGE_SHAPE[0], IMAGE_SHAPE[1]))
         in_img = np.expand_dims(cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float)/255., axis = 0)
         output = model.predict(in_img)
         print(np.max(output), np.argmax(output), output[0][np.argmax(output)])

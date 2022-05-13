@@ -16,7 +16,6 @@ def RegNetXStage(in_tensor, n_block, filter_list, kernel_size_list, strides, gro
     '''
     out_tensor = in_tensor
     for index in range(n_block):
-        print(filter_list)
         if index == 0:
             out_tensor = XBlock(out_tensor, filter_list, kernel_size_list, strides, groups, activation, weight_decay)
         else:

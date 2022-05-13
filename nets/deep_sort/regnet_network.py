@@ -38,13 +38,13 @@ def regnet_model(input_shape, num_classes=None, weight_decay=1e-8):
                             weight_decay)
     print("===========BACKBONE : ", regnetx_200MF[-1].shape[-1])
     feature_shape = (regnetx_200MF[-1].shape[-1], num_classes)
-    feature, logits = Feature_Head(regnetx_200MF[-1], feature_shape, weight_decay)
+    logits = Feature_Head(regnetx_200MF[-1], feature_shape, weight_decay)
     model = tf.keras.Model(inputs=[input_tensor], outputs=logits)
     
     return model
 
 if __name__=="__main__":
-    input_shape = (256, 128, 3)
+    input_shape = (128, 64, 3)
     num_class = 1500 + 1 # max labels : 1500 and -1 -> 1501
     weight_decay = 1e-8
     model = regnet_model(input_shape=input_shape, num_classes=num_class, weight_decay=weight_decay)

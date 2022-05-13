@@ -25,14 +25,14 @@ def Feature_Head(in_tensor, out_feature, weight_decay): # out_feature : batch x 
     kernel_regularizer = tf.keras.regularizers.l2(weight_decay)
     out_tensor = tf.keras.layers.Reshape((1, 1, -1))(in_tensor)
     out_tensor = tf.keras.layers.Dropout(0.6)(out_tensor)
-    out_tensor = tf.keras.layers.Conv2D(filters=out_feature[0], kernel_size=(1, 1), strides=(1, 1),
+    out_tensor = tf.keras.layers.Conv2D(filters=out_feature[1], kernel_size=(1, 1), strides=(1, 1),
                                            kernel_regularizer=kernel_regularizer)(out_tensor)
     
     out_tensor = tf.keras.layers.Reshape((-1,))(out_tensor)
     feature = tf.keras.layers.BatchNormalization(axis=1)(out_tensor)
 
     # Is Train only
-    if True:
+    if False:
         weight_initializer = tf.random_normal_initializer(stddev=1e-3)
         scale_initializer = tf.constant_initializer(0.)
         weight = tf.Variable(weight_initializer(shape=(out_feature[0], out_feature[1]), dtype=tf.float32), name = "mean_vectors")
@@ -44,7 +44,7 @@ def Feature_Head(in_tensor, out_feature, weight_decay): # out_feature : batch x 
         logits = scale * tf.matmul(feature, weight)
         print("feature : ", feature.shape, "logits : ", logits.shape, "weights : ", weight.shape, "scale : ", scale.shape)
         
-    return feature, logits
+    return feature
 
 def Yolo_Head(in_tensor_list, activation, num_classes, n_anchor, weight_decay):
     kernel_regularizer = tf.keras.regularizers.l2(weight_decay)

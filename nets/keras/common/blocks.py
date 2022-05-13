@@ -23,7 +23,7 @@ def StemBlock(in_tensor, filter_list, kernel_size_list, strides_list, activation
                                         activation=activation, weight_decay=weight_decay)
 
     identity_out_tensor = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(conv2d_1_out_tensor)
-
+    
     concat_out_tensor = Concatenate()([conv2d_2_2_out_tensor, identity_out_tensor])
     conv2d_3_out_tensor = Conv2dBnAct(concat_out_tensor, filter_list[2], kernel_size_list[2], strides_list[2],
                                       activation=activation, weight_decay=weight_decay)

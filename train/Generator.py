@@ -21,9 +21,9 @@ class MarsGenerator(keras.utils.Sequence):
         self.is_train = is_train
         self.is_test = False if self.is_train is True else True
         if self.is_train :
-            self.data = glob.glob(os.path.join(data_path, "bbox_train/**/***.jpg")) 
+            self.data = glob.glob(os.path.join(data_path, "bbox_train_ref/**/***.jpg")) 
         else : 
-            self.data = glob.glob(os.path.join(data_path, "bbox_test/**/***.jpg")) 
+            self.data = glob.glob(os.path.join(data_path, "bbox_test_ref/**/***.jpg")) 
         self.indexes = None
         self.on_epoch_end()
         
@@ -73,7 +73,7 @@ class MarsGenerator(keras.utils.Sequence):
         
 
 if __name__ == '__main__':
-    bgen = MarsGenerator(1, (256, 128, 3), 1501, 'D:/NOVATEK_1222/dataset/mars_dataset/', [], True)
+    bgen = MarsGenerator(1, (128, 64, 3), 1501, 'D:/NOVATEK_1222/dataset/mars_dataset/', [], True)
     print(bgen.__len__())
     for i in range(bgen.__len__()):
-        img, _, _, _ = bgen.__getitem__(i)
+        img, _ = bgen.__getitem__(i)
