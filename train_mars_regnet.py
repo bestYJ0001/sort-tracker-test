@@ -16,8 +16,8 @@ print("GPU found" if tf.test.gpu_device_name() else "No GPU found")
 
 IMAGE_SHAPE = (128, 64, 3)
 DATASET_NAME = "MARS"
-MODEL_NAME = "REGNET-S"
-TRAIN_EPOCH = 100
+MODEL_NAME = "REGNET-1501"
+TRAIN_EPOCH = 100000
 NUM_CLASS = 1500+1
 
 

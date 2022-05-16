@@ -24,13 +24,12 @@ def main():
     arg_parser = argparse.ArgumentParser(description="Metric trainer (%s)")
     arg_parser.add_argument(
         "--model_path", help="train or eval",
-        default="D:/NOVATEK_1222/python/git-source/sort-tracker-test/saved_models/MARS_REGNET-S_TEST-00030.h5")
+        default="D:/NOVATEK_1222/python/git-source/sort-tracker-test/MARS_REGNET-S_TEST-00030.h5")
     arg_parser.add_argument(
         "--data_path", help="train or eval",
-        default="D:/NOVATEK_1222/dataset/mars_dataset/bbox_train_ref/0091/0091C1T0006F030.jpg")
+        default="D:/NOVATEK_1222/dataset/mars_dataset/bbox_train_ref/*/**.jpg")
     arg_parser.add_argument(
-        "--run_id", required=True,
-        help="please "
+        "--run_id", default="TEST"
     )
     args = arg_parser.parse_args()
     
@@ -40,12 +39,25 @@ def main():
     model.load_weights(args.model_path)
     model.summary()
     datasets = glob.glob(args.data_path)
-    for dataset in datasets:
-        print(dataset)
-        img = cv2.resize(cv2.imread(dataset, cv2.IMREAD_COLOR), (IMAGE_SHAPE[0], IMAGE_SHAPE[1]))
+    import random
+    random.shuffle(datasets)
+    acc = 0.
+    count = 0
+    conf = 0.
+    for dataset in datasets[:1000]:
+        data_file_name = os.path.split(dataset)[-1]
+        data_id = data_file_name[:4]
+        img = cv2.resize(cv2.imread(dataset, cv2.IMREAD_COLOR), (IMAGE_SHAPE[1], IMAGE_SHAPE[0]))
+        cv2.imshow("dddd", img)
         in_img = np.expand_dims(cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float)/255., axis = 0)
         output = model.predict(in_img)
         print(np.max(output), np.argmax(output), output[0][np.argmax(output)])
+        acc += 1. if int(data_id) == np.argmax(output) else 0.
+        count += 1
+        conf = acc/count
+        # if cv2.waitKey(0) == ord('q'):
+            # break
+    print(conf)
     
     
     
